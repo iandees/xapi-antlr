@@ -7,7 +7,7 @@ xapi
 	;
 
 predicate 
-	: '[' predicate_internal ']'
+	: '['! predicate_internal ']'!
 	;
 
 predicate_internal
@@ -20,15 +20,15 @@ predicate_internal
 	;
 	
 user_tag_predicate
-	: '@user' '=' StringLiteral
+	: '@user' '='! StringLiteral
 	;
 	
 uid_tag_predicate
-	: '@uid' '=' Digit+
+	: '@uid' '='! Digit+
 	;
 
 changeset_tag_predicate
-	: '@changeset' '=' Digit+
+	: '@changeset' '='! Digit+
 	;
 
 child_element_predicate
@@ -52,7 +52,7 @@ value_list
 	;
 
 bbox_predicate
-	: 'bbox' '=' (DecimalLiteral ',' DecimalLiteral ',' DecimalLiteral ',' DecimalLiteral)
+	: 'bbox' '='! (DecimalLiteral ','! DecimalLiteral ','! DecimalLiteral ','! DecimalLiteral)
 	;
 
 Letter
