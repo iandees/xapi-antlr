@@ -76,6 +76,6 @@ DecimalLiteral
 	| ('-' Digit+ ('.' Digit*)?)
 	;
 
-StringLiteral : Letter (Letter | Digit | '.' | '-')*;
+StringLiteral : Letter (Letter | Digit | '.' | '-' | '\\|')*;
 
 WS: (' '|'\t'|'\u000C') {skip();};
