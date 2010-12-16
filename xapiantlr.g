@@ -7,7 +7,7 @@ xapi
 	;
 
 predicate 
-	: '['! predicate_internal ']'!
+	: '[' predicate_internal ']'
 	;
 
 predicate_internal
@@ -15,7 +15,8 @@ predicate_internal
 	| user_tag_predicate
 	| uid_tag_predicate
 	| changeset_tag_predicate
-	| tag_predicate
+	| tag_left_predicate
+	| tag_right_predicate
 	| bbox_predicate
 	;
 	
@@ -42,7 +43,11 @@ child_element_predicate
 	| 'not(relation)'
 	;
 
-tag_predicate
+tag_right_predicate
+	: value_list '=' StringLiteral
+	;
+
+tag_left_predicate
 	: StringLiteral '=' value_list
 	| StringLiteral '=' '*'
 	;
