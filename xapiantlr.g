@@ -4,6 +4,7 @@ xapi
 	: 'node' predicate+
 	| 'way' predicate+
 	| 'relation' predicate+
+	| '*' predicate+
 	;
 
 predicate 
