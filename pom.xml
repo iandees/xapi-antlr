@@ -8,12 +8,15 @@
 		<plugins>
 			<plugin>
 				<groupId>org.codehaus.mojo</groupId>
-				<artifactId>antlr3-maven-plugin</artifactId>
-				<version>1.0</version>
+				<artifactId>antlr-maven-plugin</artifactId>
+				<version>2.2</version>
+				<configuration>
+					<grammars>com/yellowbkpk/geo/xapi/antlr/XAPI.g</grammars>
+				</configuration>
 				<executions>
 					<execution>
 						<goals>
-							<goal>antlr</goal>
+							<goal>generate</goal>
 						</goals>
 					</execution>
 				</executions>
@@ -24,7 +27,7 @@
 		<dependency>
 			<groupId>org.antlr</groupId>
 			<artifactId>antlr-runtime</artifactId>
-			<version>3.0.1</version>
+			<version>3.1.1</version>
 		</dependency>
 	</dependencies>
 </project>
