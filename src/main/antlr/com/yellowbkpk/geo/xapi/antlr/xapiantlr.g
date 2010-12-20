@@ -1,5 +1,9 @@
 grammar xapiantlr;
 
+options {
+	output=AST;
+}
+
 xapi
 	: 'node' predicate+
 	| 'way' predicate+
