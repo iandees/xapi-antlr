@@ -18,23 +18,23 @@ import com.yellowbkpk.geo.xapi.antlr.XAPIParser;
 
 public class XAPIQueryInfo {
 	
-	enum RequestType {
+	public enum RequestType {
 		ALL("*"),
 		NODE("node"),
 		WAY("way"),
 		RELATION("relation");
 		
 		private static Map<String, RequestType> val = new HashMap<String, RequestType>();
+		static {
+			for (RequestType i : values()) {
+				val.put(i.t, i);
+			}
+		}
 		private String t;
 		private RequestType(String t) {
 			this.t = t;
 		}
 		public static RequestType fromValue(String v) {
-			if(val == null) {
-				for (RequestType i : values()) {
-					val.put(i.t, i);
-				}
-			}
 			return val.get(v);
 		}
 	}
@@ -87,9 +87,9 @@ public class XAPIQueryInfo {
 		
 		// Wildcard on the right
 		if(rightValues.length == 1 && rightValues[0].equals("*")) {
-			Selector.Tag.Wildcard[] retVal = new Selector.Tag.Wildcard[rightValues.length];
+			Selector.Tag.Wildcard[] retVal = new Selector.Tag.Wildcard[leftValues.length];
 			int i = 0;
-			for (String value : rightValues) {
+			for (String value : leftValues) {
 				retVal[i++] = new Selector.Tag.Wildcard(value);
 			}
 			return retVal;

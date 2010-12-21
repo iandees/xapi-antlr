@@ -69,6 +69,7 @@ child_element_predicate
 tag_predicate
 	: l1=StringLiteral '=' r1=value_list -> ^(TAG_PREDICATE ^(LEFT $l1) ^(RIGHT $r1))
 	| l1=StringLiteral '=' r2='*' -> ^(TAG_PREDICATE ^(LEFT $l1) ^(RIGHT $r2))
+	| l2=value_list '=' r2='*' -> ^(TAG_PREDICATE ^(LEFT $l2) ^(RIGHT $r2))
 	| l2=value_list '=' r3=StringLiteral -> ^(TAG_PREDICATE ^(LEFT $l2) ^(RIGHT $r3))
 	;
 	
