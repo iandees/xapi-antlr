@@ -1,18 +1,37 @@
 grammar XAPI;
 
+options {
+	backtrack=true;
+	memoize=true;
+	output=AST;
+	language=Java;
+}
+
+tokens {
+	REQUEST_KIND;
+	BBOX_PREDICATE;
+	TAG_PREDICATE;
+	LEFT;
+	RIGHT;
+}
+
 @header {
 package com.yellowbkpk.geo.xapi.antlr;
 }
 
+@lexer::header {
+package com.yellowbkpk.geo.xapi.antlr;
+}
+
 xapi
-	: 'node' predicate+
-	| 'way' predicate+
-	| 'relation' predicate+
-	| '*' predicate+
+	: 'node' pred+=predicate+ -> ^(REQUEST_KIND 'node') $pred*
+	| 'way' pred+=predicate+ -> ^(REQUEST_KIND 'way') $pred*
+	| 'relation' pred+=predicate+ -> ^(REQUEST_KIND 'relation') $pred*
+	| '*' pred+=predicate+ -> ^(REQUEST_KIND '*') $pred*
 	;
 
 predicate 
-	: '[' predicate_internal ']'
+	: '[' predicate_internal ']' -> predicate_internal
 	;
 
 predicate_internal
@@ -20,21 +39,20 @@ predicate_internal
 	| user_tag_predicate
 	| uid_tag_predicate
 	| changeset_tag_predicate
-	| tag_left_predicate
-	| tag_right_predicate
+	| tag_predicate
 	| bbox_predicate
 	;
 	
 user_tag_predicate
-	: '@user' '=' StringLiteral
+	: '@user' '='! StringLiteral
 	;
 	
 uid_tag_predicate
-	: '@uid' '=' Digit+
+	: '@uid' '='! Digit+
 	;
 
 changeset_tag_predicate
-	: '@changeset' '=' Digit+
+	: '@changeset' '='! Digit+
 	;
 
 child_element_predicate
@@ -48,21 +66,18 @@ child_element_predicate
 	| 'not(relation)'
 	;
 
-tag_right_predicate
-	: value_list '=' StringLiteral
-	;
-
-tag_left_predicate
-	: StringLiteral '=' value_list
-	| StringLiteral '=' '*'
+tag_predicate
+	: l1=StringLiteral '=' r1=value_list -> ^(TAG_PREDICATE ^(LEFT $l1) ^(RIGHT $r1))
+	| l1=StringLiteral '=' r2='*' -> ^(TAG_PREDICATE ^(LEFT $l1) ^(RIGHT $r2))
+	| l2=value_list '=' r3=StringLiteral -> ^(TAG_PREDICATE ^(LEFT $l2) ^(RIGHT $r3))
 	;
 	
 value_list
-	: StringLiteral ('|' StringLiteral)*
+	: StringLiteral ('|'! StringLiteral)*
 	;
 
 bbox_predicate
-	: 'bbox' '=' (DecimalLiteral ','! DecimalLiteral ','! DecimalLiteral ','! DecimalLiteral)
+	: 'bbox' '=' (l=DecimalLiteral ',' b=DecimalLiteral ',' r=DecimalLiteral ',' t=DecimalLiteral) -> ^(BBOX_PREDICATE $l $b $r $t)
 	;
 
 Letter
@@ -76,11 +91,10 @@ Letter
     ;
 
 fragment Digit : '0'..'9';
+fragment WS: (' '|'\t'|'\u000C');
 DecimalLiteral
 	: (Digit+ ('.' Digit*)?)
 	| ('-' Digit+ ('.' Digit*)?)
 	;
 
-StringLiteral : Letter (Letter | Digit | '.' | '-' | '\\|')*;
-
-WS: (' '|'\t'|'\u000C') {skip();};
+StringLiteral : (Letter | Digit | WS | '.' | '-' | '\\|')+;
