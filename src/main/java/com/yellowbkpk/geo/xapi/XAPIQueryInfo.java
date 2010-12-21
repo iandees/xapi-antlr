@@ -40,14 +40,11 @@ public class XAPIQueryInfo {
 	}
 
 	private RequestType type;
-	private List<Selector> bbox;
-	private List<Selector> tag;
+	private List<Selector> selectors;
 
-	private XAPIQueryInfo(RequestType type, List<Selector> bboxSelectors,
-			List<Selector> tagSelectors) {
+	private XAPIQueryInfo(RequestType type, List<Selector> selectors) {
 		this.type = type;
-		this.bbox = bboxSelectors;
-		this.tag = tagSelectors;
+		this.selectors = selectors;
 	}
 	
 	public static XAPIQueryInfo fromString(String str) throws RecognitionException {
@@ -63,22 +60,21 @@ public class XAPIQueryInfo {
 		
 		RequestType type = RequestType.fromValue(valueOf(map.get("REQUEST_KIND")));
 		
-		List<Selector> bboxSelectors = new LinkedList<Selector>();
+		List<Selector> selectors = new LinkedList<Selector>();
 		List<Tree> predicateTrees = map.get("BBOX_PREDICATE");
 		for (Tree predicateTree : predicateTrees) {
-			bboxSelectors.add(buildBboxSelector(predicateTree));
+			selectors.add(buildBboxSelector(predicateTree));
 		}
 		
-		List<Selector> tagSelectors = new LinkedList<Selector>();
 		predicateTrees = map.get("TAG_PREDICATE");
 		for (Tree predicateTree : predicateTrees) {
 			Selector[] tags = buildTagSelector(predicateTree);
 			for (Selector selector : tags) {
-				tagSelectors.add(selector);
+				selectors.add(selector);
 			}
 		}
 		
-		return new XAPIQueryInfo(type, bboxSelectors, tagSelectors);
+		return new XAPIQueryInfo(type, selectors);
 	}
 
 	private static Selector[] buildTagSelector(Tree predicateTree) {
@@ -141,6 +137,14 @@ public class XAPIQueryInfo {
 			children.add(child);
 		}
 		return ret;
+	}
+
+	public RequestType getKind() {
+		return type;
+	}
+
+	public List<Selector> getSelectors() {
+		return selectors;
 	}
 
 }
