@@ -5,8 +5,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import org.antlr.runtime.ANTLRStringStream;
+import org.antlr.runtime.CharStream;
+import org.antlr.runtime.CommonTokenStream;
+import org.antlr.runtime.RecognitionException;
+import org.antlr.runtime.tree.CommonTree;
 import org.antlr.runtime.tree.Tree;
 import org.openstreetmap.osmosis.pgsnapshot.v0_6.impl.Selector;
+
+import com.yellowbkpk.geo.xapi.antlr.XAPILexer;
+import com.yellowbkpk.geo.xapi.antlr.XAPIParser;
 
 public class XAPIQueryInfo {
 	
@@ -41,8 +49,16 @@ public class XAPIQueryInfo {
 		this.bbox = bboxSelectors;
 		this.tag = tagSelectors;
 	}
+	
+	public static XAPIQueryInfo fromString(String str) throws RecognitionException {
+		CharStream stream = new ANTLRStringStream(str);
+		XAPILexer lexer = new XAPILexer(stream);
+		CommonTokenStream tokens = new CommonTokenStream(lexer);
+		XAPIParser parser = new XAPIParser(tokens);
+		return fromAST((CommonTree) parser.xapi().getTree());
+	}
 
-	public static XAPIQueryInfo fromAST(Tree tree) {
+	private static XAPIQueryInfo fromAST(Tree tree) {
 		Map<String, List<Tree>> map = childNodes(tree);
 		
 		RequestType type = RequestType.fromValue(valueOf(map.get("REQUEST_KIND")));
