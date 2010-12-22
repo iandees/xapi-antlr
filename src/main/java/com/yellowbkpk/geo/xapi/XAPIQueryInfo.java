@@ -63,15 +63,19 @@ public class XAPIQueryInfo {
 		
 		List<Selector> selectors = new LinkedList<Selector>();
 		List<Tree> predicateTrees = map.get("BBOX_PREDICATE");
-		for (Tree predicateTree : predicateTrees) {
-			selectors.add(buildBboxSelector(predicateTree));
+		if(predicateTrees != null) {
+			for (Tree predicateTree : predicateTrees) {
+				selectors.add(buildBboxSelector(predicateTree));
+			}
 		}
 		
 		predicateTrees = map.get("TAG_PREDICATE");
-		for (Tree predicateTree : predicateTrees) {
-			Selector[] tags = buildTagSelector(predicateTree);
-			for (Selector selector : tags) {
-				selectors.add(selector);
+		if(predicateTrees != null) {
+			for (Tree predicateTree : predicateTrees) {
+				Selector[] tags = buildTagSelector(predicateTree);
+				for (Selector selector : tags) {
+					selectors.add(selector);
+				}
 			}
 		}
 		
