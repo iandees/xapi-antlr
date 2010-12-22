@@ -28,6 +28,7 @@ xapi
 	| 'way' pred+=predicate+ -> ^(REQUEST_KIND 'way') $pred*
 	| 'relation' pred+=predicate+ -> ^(REQUEST_KIND 'relation') $pred*
 	| '*' pred+=predicate+ -> ^(REQUEST_KIND '*') $pred*
+	| 'map?' pred1=bbox_predicate -> ^(REQUEST_KIND 'map?') $pred1
 	;
 
 predicate 

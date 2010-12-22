@@ -22,7 +22,8 @@ public class XAPIQueryInfo {
 		ALL("*"),
 		NODE("node"),
 		WAY("way"),
-		RELATION("relation");
+		RELATION("relation"),
+		MAP("map?");
 		
 		private static Map<String, RequestType> val = new HashMap<String, RequestType>();
 		static {
