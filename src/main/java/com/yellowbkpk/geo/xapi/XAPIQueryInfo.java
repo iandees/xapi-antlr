@@ -41,11 +41,13 @@ public class XAPIQueryInfo {
 	}
 
 	private RequestType type;
+	private List<Selector.BoundingBox> boundingBoxes;
 	private List<Selector> selectors;
 
-	private XAPIQueryInfo(RequestType type, List<Selector> selectors) {
+	private XAPIQueryInfo(RequestType type, List<Selector> selectors, List<Selector.BoundingBox> bboxSelectors) {
 		this.type = type;
 		this.selectors = selectors;
+		this.boundingBoxes = bboxSelectors;
 	}
 	
 	public static XAPIQueryInfo fromString(String str) throws RecognitionException {
@@ -62,10 +64,11 @@ public class XAPIQueryInfo {
 		RequestType type = RequestType.fromValue(valueOf(map.get("REQUEST_KIND")));
 		
 		List<Selector> selectors = new LinkedList<Selector>();
+		List<Selector.BoundingBox> bboxSelectors = new LinkedList<Selector.BoundingBox>();
 		List<Tree> predicateTrees = map.get("BBOX_PREDICATE");
 		if(predicateTrees != null) {
 			for (Tree predicateTree : predicateTrees) {
-				selectors.add(buildBboxSelector(predicateTree));
+				bboxSelectors.add(buildBboxSelector(predicateTree));
 			}
 		}
 		
@@ -79,7 +82,7 @@ public class XAPIQueryInfo {
 			}
 		}
 		
-		return new XAPIQueryInfo(type, selectors);
+		return new XAPIQueryInfo(type, selectors, bboxSelectors);
 	}
 
 	private static Selector[] buildTagSelector(Tree predicateTree) {
@@ -148,8 +151,12 @@ public class XAPIQueryInfo {
 		return type;
 	}
 
-	public List<Selector> getSelectors() {
+	public List<Selector> getTagSelectors() {
 		return selectors;
+	}
+
+	public List<Selector.BoundingBox> getBboxSelectors() {
+		return boundingBoxes;
 	}
 
 }
