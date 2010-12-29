@@ -123,9 +123,9 @@ public class XAPIQueryInfo {
 
 	private static Selector.BoundingBox buildBboxSelector(Tree predicateTree) {
 		double left = Double.parseDouble(predicateTree.getChild(0).getText());
-		double right = Double.parseDouble(predicateTree.getChild(1).getText());
-		double top = Double.parseDouble(predicateTree.getChild(2).getText());
-		double bottom = Double.parseDouble(predicateTree.getChild(3).getText());
+		double bottom = Double.parseDouble(predicateTree.getChild(1).getText());
+		double right = Double.parseDouble(predicateTree.getChild(2).getText());
+		double top = Double.parseDouble(predicateTree.getChild(3).getText());
 		return new Selector.BoundingBox(left, right, top, bottom);
 	}
 
