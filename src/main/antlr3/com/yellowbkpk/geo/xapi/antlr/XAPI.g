@@ -11,6 +11,9 @@ tokens {
 	REQUEST_KIND;
 	BBOX_PREDICATE;
 	TAG_PREDICATE;
+	USER_PREDICATE;
+	UID_PREDICATE;
+	CHANGESET_PREDICATE;
 	LEFT;
 	RIGHT;
 }
@@ -45,15 +48,15 @@ predicate_internal
 	;
 	
 user_tag_predicate
-	: '@user' '='! StringLiteral
+	: '@user' '=' r1=StringLiteral -> ^(USER_PREDICATE $r1)
 	;
 	
 uid_tag_predicate
-	: '@uid' '='! Digit+
+	: '@uid' '=' r1=(Digit+) -> ^(UID_PREDICATE $r1)
 	;
 
 changeset_tag_predicate
-	: '@changeset' '='! Digit+
+	: '@changeset' '=' r1=(Digit+) -> ^(CHANGESET_PREDICATE $r1)
 	;
 
 child_element_predicate
