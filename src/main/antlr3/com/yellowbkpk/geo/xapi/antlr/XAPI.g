@@ -14,6 +14,7 @@ tokens {
 	USER_PREDICATE;
 	UID_PREDICATE;
 	CHANGESET_PREDICATE;
+	POLYGON_PREDICATE;
 	LEFT;
 	RIGHT;
 }
@@ -45,6 +46,7 @@ predicate_internal
 	| changeset_tag_predicate
 	| tag_predicate
 	| bbox_predicate
+	| polygon_predicate
 	;
 	
 user_tag_predicate
@@ -83,6 +85,10 @@ value_list
 
 bbox_predicate
 	: 'bbox' '=' (l=DecimalLiteral ',' b=DecimalLiteral ',' r=DecimalLiteral ',' t=DecimalLiteral) -> ^(BBOX_PREDICATE $l $b $r $t)
+	;
+
+polygon_predicate
+	: 'poly' '=' (str=StringLiteral) -> ^(POLYGON_PREDICATE $str)
 	;
 
 Letter
